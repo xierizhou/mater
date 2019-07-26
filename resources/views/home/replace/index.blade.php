@@ -229,8 +229,7 @@
         $("body").on('click','.confirm',function(){
             var url  = $(this).attr("data-download-url");
             var is_download  = $(this).attr("data-is-download");
-
-            if(is_download){
+            if(is_download>0){
                 layer.close(window_open);
                 var confirm = layer.confirm('<span style="font-size:12px">检测到您曾下载过该素材，请问是否继续提交？<br/>温馨提示：<span style="color:red">继续提交您的下载次数-1</span></span>', {
                     btn: ['继续提交','取消'], //按钮

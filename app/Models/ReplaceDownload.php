@@ -11,4 +11,8 @@ class ReplaceDownload extends Model
     protected $fillable = [
         'replace_id','material_id','material_file_id','email_id','email','download_url','pic_no','title',
     ];
+
+    public function replace(){
+        return $this->belongsTo(Replace::class);
+    }
 }

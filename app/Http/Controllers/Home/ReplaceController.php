@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 
+use App\Jobs\MaterialReplaceDownloadJob;
 use App\Models\Material;
 use App\Models\MaterialFile;
 use App\Models\ReplaceDownload;
@@ -13,7 +14,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Replace;
 use Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
+use App\Models\Channel;
+use App\Services\ChannelService;
 class ReplaceController extends Controller
 {
     private $replace;
@@ -36,13 +39,14 @@ class ReplaceController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return $this
+     * @throws \Throwable
      */
     public function index(){
 
-
-
-        $to = '384860859@qq.com';
+        /*$ReplaceDownload = ReplaceDownload::find(14);
+        dd($ReplaceDownload->replace->toArray());*/
+        /*$to = '384860859@qq.com';
         $subject = '测试一封邮件';
         Mail::send(
             'emails.replace',
@@ -50,7 +54,13 @@ class ReplaceController extends Controller
             function ($message) use($to, $subject) {
                 $message->to($to)->subject($subject);
             }
-        );
+        );*/
+
+        $channel = Channel::find(3); //2450800  1823320
+        $url = 'https://www.58pic.com/newpic/35021977.html';
+        $materialFile = ChannelService::getInstance($channel)->setSaveOss(false)->download($url);
+        dd($materialFile);
+
 
         $material = Material::orderBy('state','desc')->get();
         return view('home.replace.index')
@@ -73,35 +83,6 @@ class ReplaceController extends Controller
             return response()->json(['status_code'=>400,'message'=>$exception->getMessage()],400);
         }
 
-
-        /*try{
-
-            $material = MaterialUrlAnalysisService::getBuildMaterial($request->url);
-            if(!$material){
-                throw new \Exception('素材未找到');
-            }
-            if(!$material->state){
-                throw new \Exception($material->name."将会在".$material->state_cause."哦~");
-            }
-
-
-            $channel = Channel::find(3);
-
-            $materialFile = ChannelService::getInstance($channel)->download($request->url);
-
-            if($materialFile){
-
-                $html = response($this->showDownload($materialFile))->getContent();
-
-                $this->replace->decrement("number");
-                return response()->json(['status_code'=>200,'is_decrease'=>$materialFile->is_decrease,'message'=>'解析成功','data'=>$html]);
-            }
-            throw new \Exception("素材解析错误~");
-
-        }catch (\Exception $exception){
-
-            return response()->json(['status_code'=>400,'message'=>$exception->getMessage()],400);
-        }*/
     }
 
     /**
@@ -126,6 +107,7 @@ class ReplaceController extends Controller
 
             if($res && $res1){
                 DB::commit();
+                MaterialReplaceDownloadJob::dispatch($res)->delay(Carbon::now()->addSeconds(25));
                 $email = $this->replace->email;
                 $message = "<span style='font-size:12px'>提交成功~<br/>系统将会在5分钟内把素材发至<span style='color:blue'>$email</span>邮箱，请注意查收，如有疑问请联系客服~<br/><span style='color:red'>(该邮件由系统自动发出,有可能会在邮件垃圾箱中)</span></span>";
                 return response()->json(['status_code'=>200,'message'=>$message,'data'=>['number'=>$this->replace->number]]);
@@ -187,6 +169,7 @@ class ReplaceController extends Controller
         ];
         $pic_no = MaterialUrlAnalysisService::parseUrlItemNo($url);
         $replace_download = ReplaceDownload::where('replace_id',$this->replace->id)->where('material_id',$this->material->id)->where('pic_no',$pic_no)->first();
+
         return view('home.replace.download')->with('data',$data)->with('material',$material)->with('is_download',$replace_download?1:0);
     }
 }

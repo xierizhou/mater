@@ -18,6 +18,8 @@ class ChannelService implements ChannelInterface
 
     private $object;
 
+    private $saveOss = true;
+
     private $channel;
 
     private function __clone(){}
@@ -57,6 +59,15 @@ class ChannelService implements ChannelInterface
     }
 
     /**
+     * @param bool $bool
+     * @return $this
+     */
+    public function setSaveOss($bool = true){
+        $this->saveOss = $bool;
+        return $this;
+    }
+
+    /**
      * @param string $url
      * @return mixed|void
      * @throws \Throwable
@@ -90,15 +101,17 @@ class ChannelService implements ChannelInterface
 
 
         $source = $this->object->download($url);
+        dd($source);
         try{
             $file = $this->saveMaterialFile($url,$source);
-            if(!$file->is_oss){
+            if(!$file->is_oss && $this->saveOss){
                 DownloadMaterialJob::dispatch($file);
             }
 
             return $file;
         }catch (\Exception $exception){
-            dd($exception->getMessage());
+            throw new \Exception($exception->getMessage());
+            //dd($exception->getMessage());
         }
 
 

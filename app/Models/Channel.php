@@ -37,4 +37,9 @@ class Channel extends Model
     protected $fillable = [
         'name','alias_name','domain','username','password','state'
     ];
+
+    public function cookies()
+    {
+        return $this->hasMany(ChannelCookie::class);
+    }
 }
