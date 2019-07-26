@@ -56,10 +56,10 @@ class ReplaceController extends Controller
             }
         );*/
 
-        $channel = Channel::find(3); //2450800  1823320
+        /*$channel = Channel::find(3); //2450800  1823320
         $url = 'https://www.58pic.com/newpic/35021977.html';
         $materialFile = ChannelService::getInstance($channel)->setSaveOss(false)->download($url);
-        dd($materialFile);
+        dd($materialFile);*/
 
 
         $material = Material::orderBy('state','desc')->get();
