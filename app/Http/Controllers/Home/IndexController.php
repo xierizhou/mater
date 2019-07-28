@@ -23,22 +23,9 @@ class IndexController extends Controller
      */
     public function show(){
 
-        /*$materialFile = MaterialFile::find(31);
-        foreach($materialFile->attachments as $item){
-            $save = MaterialDownloadUploadOssService::getInstance()
-                ->downLoad($item->path?:$item->source,'58pic')
-                ->uploadOss(true);
 
-            $item->is_oss = 1;
-            $item->oss = $save;
-            $item->save();
-        }
-        dd(123213);*/
-
-        /*$channel = Channel::find(3);
-        $file = ChannelService::getInstance($channel)->download("https://www.58pic.com/newpic/33415436.html");
-        dd($file->toArray());*/
         $material = Material::orderBy('state','desc')->get();
+
         $userMaterial = UserMaterial::where('user_id',auth()->user()->id)->where('status',1)->get()->keyBy('material_id');
         return view('home.index')
             ->with('material',$material)
@@ -73,10 +60,7 @@ class IndexController extends Controller
                 throw new \Exception($material->name.$material->state_cause);
             }
 
-            /*$MaterialDownload = new MaterialDownloadService($material,$request->url);
-            $materialFile = $MaterialDownload->download();*/
-            $channel = Channel::find(3);
-
+            $channel = Channel::find(4);
             $materialFile = ChannelService::getInstance($channel)->download($request->url);
 
             if($materialFile){
@@ -100,6 +84,14 @@ class IndexController extends Controller
      * @return
      **/
     public function showDownload(MaterialFile $materialFile){
+
+
+        /*$url = ;
+        $res = parse_url($url);
+        $path = explode('.',$res['path']);
+        if(array_get($path,'1') != 'zip'){
+
+        }*/
 
         return view('home.download')->with('data',$materialFile);
     }

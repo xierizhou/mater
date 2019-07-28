@@ -134,31 +134,12 @@ class YuanSuPicAdapterChannel extends ChannelsAdapter implements ChannelInterfac
                 'Host'=>'15cheng.yuansupic.com',
                 'Origin'=>'http://15cheng.yuansupic.com',
                 'Referer'=>'http://15cheng.yuansupic.com/',
-                'User-Agent'=>'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+                'User-Agent'=>'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ipad/537.36 (KHTML, like Gecko) ipad/73.0.3683.103 ',
                 'X-Requested-With'=>'XMLHttpRequest'
             ],
         ]);
 
-        $setCookie = $result->getHeader('Set-Cookie');
-        foreach ($setCookie as $item){
-            $tmp = explode(';',$item);
-            $reCookie = explode('=',array_get($tmp,0));
-            if(array_get($reCookie,0) == 'tk'){
-                $channel_cookie = ChannelCookie::where("channel_id",$this->channel->id)->where('type','tk')->first();
-                if($channel_cookie){
-                    $channel_cookie->cookie = array_get($tmp,0);
-                    $channel_cookie->save();
-                }else{
-                    ChannelCookie::create([
-                        'channel_id'=>$this->channel->id,
-                        'type'=>'tk',
-                        'cookie'=>array_get($tmp,0),
-                    ]);
-                }
 
-            }
-
-        }
         $body = json_decode($result->getBody(),true);
         dd($body);
         if(array_get($body,'status') == 0){

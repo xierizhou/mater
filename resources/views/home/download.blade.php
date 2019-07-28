@@ -83,11 +83,16 @@
                         <span>素材链接：</span>
                         <span><a target="_blank" href="{{ $data->source }}">{{ $data->source }}</a></span>
                     </li>
+
+                    <li>
+                        <span>验证：</span>
+                        <span><div id="hd"></div></span>
+                    </li>
                 </ul>
 
                 <div class="btn">
                     @foreach($data->attachments as $item)
-                    <a target="_blank" href="{{ $item->path?:$item->source }}"><span>下载{{ $item->title?:"文件" }}</span></a>
+                    <a class="yz" data-href="{{ $item->path?:$item->source }}" href="javascript:;"><span>下载{{ $item->title?:"文件" }}</span></a>
                     @endforeach
 
                 </div>

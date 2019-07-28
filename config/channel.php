@@ -6,5 +6,5 @@
 return [
     'http://sssc.co'=>\App\Services\Channels\SsScChannelService::class,
     'yuansupic'=>\App\Services\Adapters\Channels\YuanSuPicAdapterChannel::class,
-
+    'ibaotu'=>\App\Services\Adapters\Channels\IbaotuAdapterChannel::class,
 ];

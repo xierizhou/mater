@@ -7,6 +7,7 @@ use App\Jobs\MaterialReplaceDownloadJob;
 use App\Models\Material;
 use App\Models\MaterialFile;
 use App\Models\ReplaceDownload;
+use App\Services\MaterialDownloadUploadOssService;
 use App\Services\MaterialUrlAnalysisService;
 use App\Services\ObtainPageService;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use App\Models\Replace;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use App\Models\Channel;
 use App\Services\ChannelService;
 class ReplaceController extends Controller
@@ -43,23 +45,6 @@ class ReplaceController extends Controller
      * @throws \Throwable
      */
     public function index(){
-
-        /*$ReplaceDownload = ReplaceDownload::find(14);
-        dd($ReplaceDownload->replace->toArray());*/
-        /*$to = '384860859@qq.com';
-        $subject = '测试一封邮件';
-        Mail::send(
-            'emails.replace',
-            ['data' => MaterialFile::find(1)],
-            function ($message) use($to, $subject) {
-                $message->to($to)->subject($subject);
-            }
-        );*/
-
-        /*$channel = Channel::find(3); //2450800  1823320
-        $url = 'https://www.58pic.com/newpic/35021977.html';
-        $materialFile = ChannelService::getInstance($channel)->setSaveOss(false)->download($url);
-        dd($materialFile);*/
 
 
         $material = Material::orderBy('state','desc')->get();
@@ -107,7 +92,9 @@ class ReplaceController extends Controller
 
             if($res && $res1){
                 DB::commit();
-                MaterialReplaceDownloadJob::dispatch($res)->delay(Carbon::now()->addSeconds(25));
+
+
+                MaterialReplaceDownloadJob::dispatch($res)->delay(Carbon::now()->addSeconds(10));//
                 $email = $this->replace->email;
                 $message = "<span style='font-size:12px'>提交成功~<br/>系统将会在5分钟内把素材发至<span style='color:blue'>$email</span>邮箱，请注意查收，如有疑问请联系客服~<br/><span style='color:red'>(该邮件由系统自动发出,有可能会在邮件垃圾箱中)</span></span>";
                 return response()->json(['status_code'=>200,'message'=>$message,'data'=>['number'=>$this->replace->number]]);
@@ -148,7 +135,7 @@ class ReplaceController extends Controller
         $this->material = $material;
 
         $Obtain = new ObtainPageService();
-        $obtain_config = config('obtain.58pic');
+        $obtain_config = config('obtain.ibaotu');
         $attachments = $Obtain->build(new $obtain_config,$request->url);
         if(!array_get($attachments,'title')){
             throw new \Exception('素材未找到');

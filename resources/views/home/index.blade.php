@@ -146,7 +146,7 @@
                                                             @else
                                                                 <p class="num">剩余{{ array_get($userMaterial,$item->id.'.current') }}次 <i data-tips-content="{{ array_get($userMaterial,$item->id.'.end_time')>0?date('Y年m月d日',array_get($userMaterial,$item->id.'.end_time')).' 到期':"不限时间<br />用完为止" }}" style="font-size:12px;font-weight: bolder;color:#e6c934" data-item-id="{{ $item->id }}"  class="layui-icon layui-icon-tips tips_key_{{ $item->id }}"></i> </p>
                                                             @endif--}}
-                                                            <p class="num">原创、共享、办公</p>
+                                                            <p class="num">支持全站下载</p>
 
                                                             <p onclick='window.open("{{ $item->domain }}");'>{{ $item->name }}</p>
                                                         </b>
@@ -281,5 +281,7 @@
 
     });
 </script>
+<script src="{{ url('js/Verification.js') }}"></script>
+<script src="//g.alicdn.com/sd/nvc/1.1.112/guide.js"></script>
 </body>
 </html>

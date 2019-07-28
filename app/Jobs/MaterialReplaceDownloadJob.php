@@ -20,7 +20,14 @@ class MaterialReplaceDownloadJob implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 5;
+    //public $tries = 5;
+
+    /**
+     * 任务运行的超时时间。
+     *
+     * @var int
+     */
+    public $timeout = 1800;
 
     /**
      * @var ReplaceDownload
@@ -43,8 +50,9 @@ class MaterialReplaceDownloadJob implements ShouldQueue
     {
 
         try{
-            $channel = Channel::find(3);
+            $channel = Channel::find(4);
             $materialFile = ChannelService::getInstance($channel)->setSaveOss(false)->download($this->replaceDownload->download_url);
+
             if($materialFile){
                 $material_name = $materialFile->material->site;
                 foreach($materialFile->attachments as $item){

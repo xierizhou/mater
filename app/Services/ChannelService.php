@@ -77,6 +77,7 @@ class ChannelService implements ChannelInterface
 
         //提取下载文件中的编号
         $item_no = MaterialUrlAnalysisService::parseUrlItemNo($url);
+
         $material = MaterialUrlAnalysisService::getBuildMaterial($url);
 
 
@@ -101,7 +102,7 @@ class ChannelService implements ChannelInterface
 
 
         $source = $this->object->download($url);
-        dd($source);
+
         try{
             $file = $this->saveMaterialFile($url,$source);
             if(!$file->is_oss && $this->saveOss){

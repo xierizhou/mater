@@ -34,9 +34,7 @@ class MaterialDownloadUploadOssService
      **/
     public function downLoad($url,$material_name){
         $this->materialName = $material_name;
-
         $this->fileInfo = $this->getFile($url,public_path("downloads/$material_name"),md5(time().rand(1000,9999)));
-
         return $this;
     }
 
