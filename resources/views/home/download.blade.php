@@ -92,7 +92,7 @@
 
                 <div class="btn">
                     @foreach($data->attachments as $item)
-                    <a class="yz" data-href="{{ $item->path?:$item->source }}" href="javascript:;"><span>下载{{ $item->title?:"文件" }}</span></a>
+                    <a class="yz" data-is-yz="{{ $is_yz }}" data-href="{{ $item->path?:$item->source }}" href="javascript:;"><span>下载{{ $item->title?:"文件" }}</span></a>
                     @endforeach
 
                 </div>

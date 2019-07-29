@@ -3,11 +3,12 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <img src="{{ $qr_url }}" />
-        <p>{{ $data['qrsig'] }}</p>
+        <img class="show_qr" src="{{ $qr_url }}" />
+        <p class="message"></p>
     </div>
 </div>
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
 <script>
     function hash33(t){
         for(var e=0,i=0,n=t.length;i<n;++i)
@@ -55,9 +56,8 @@
         switch (t) {
             case "0":
                 //已授权登录
-                console.log(i);
                 loginSucessRequest(i);
-
+                $('.message').text("完成授权...");
                 break;
             case "3":
 
@@ -71,14 +71,16 @@
                 break;
             case "65":
                 alert("二维码已失效，请重新扫码登录");
-                setTimeout("location.reload()",5000);
+                setTimeout("location.reload()",500);
                 //二维码已失效
                 break;
             case "66":
+                $('.message').text("等待扫码中...");
                 setTimeout("pollingCheckQRStatic()",1000);
                 //二维码未失效，等待扫码
                 return;
             case "67":
+                $('.message').text("检测到您已扫码，请允许登录...");
                 setTimeout("pollingCheckQRStatic()",1000);
                 //二维码认证中，已扫码
                 break;

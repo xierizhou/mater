@@ -19,7 +19,7 @@ class AuthorizationLoginController extends Controller
         $res = $client->request('POST',$url,[
             'headers'=>[
                 'Content-Type'=>'application/x-www-form-urlencoded',
-                'Cookie'=>'pt2gguin=o0384860859;p_uin=o0384860859;pt4_token=94y7iItU-EMBKygDFuFxDIzTq6K*3pwAVA2nWNoD9GY_;p_skey=kMjNGQ44z1b2bk0jS8LwToOPMvX7AcOFaH0uxQzVuDM_',
+                'Cookie'=>'p_uin=o0384860859; pt4_token=dhgxQFoOUK784ybM0MarJWw*L8rYoNnly6tP4tHggKA_; p_skey=KVcx80RuA*aczF0fX1Dsdlq8CRJZ1GmHRLEu0ws7WwQ_',
                 'Host'=>'graph.qq.com',
                 'Origin'=>'https://graph.qq.com',
                 'Referer'=>'https://graph.qq.com/oauth2.0/show?which=Login&display=pc&client_id=101252414&redirect_uri=https%3A%2F%2F588ku.com%2Fdlogin%2Fcallback%2Fqq&response_type=code&scope=get_user_info%2Cadd_share%2Cadd_pic_t',
@@ -28,16 +28,16 @@ class AuthorizationLoginController extends Controller
             ],
             'form_params'=>[
                 'response_type'=>'code',
-                'client_id'=>101252414,
-                'redirect_uri'=>'https://588ku.com/dlogin/callback/qq',
+                'client_id'=>101483052,
+                'redirect_uri'=>'https://access.video.qq.com/user/auth_login?vappid=11059694&vsecret=fdf61a6be0aad57132bc5cdf78ac30145b6cd2c1470b0cfe&raw=1&type=qq&appid=101483052',
                 'scope'=>'get_user_info,add_share,add_pic_t',
                 'from_ptlogin'=>1,
                 'src'=>1,
                 'update_auth'=>1,
                 'openapi'=>'80901010',
-                'g_tk'=>2119808994,
-                'auth_time'=>'1564393999227',
-                'ui'=>'BC4D7ACF-D96A-47CB-91D6-F048669D8A00',
+                'g_tk'=>1324202875,
+                'auth_time'=>'1564401638106',
+                //'ui'=>'BC4D7ACF-D96A-47CB-91D6-F048669D8A00',
             ],
             'allow_redirects'=>false,
         ]);

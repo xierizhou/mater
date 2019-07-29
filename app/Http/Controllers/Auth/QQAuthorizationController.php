@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cookie;
 class QQAuthorizationController extends Controller
 {
 
-    private $pt_3rd_aid = 101252414;
+    private $pt_3rd_aid = 101483052;
 
     /**
      * 显示登录二维码
@@ -99,15 +99,17 @@ class QQAuthorizationController extends Controller
         AuthorizationCookie::where('authorization_id',1)->where('uin','384860859')->delete();
         foreach($setCookie as $item){
             $cookie = explode('=',array_get(explode(';',$item),0));
-            if(array_get($cookie,1)){
+            if(array_get($cookie,1) && array_get($cookie,0) != 'pt2gguin'){
+
                 Cookie::queue(array_get($cookie,0), array_get($cookie,1));
                 $dataCookie[array_get($cookie,0)] = array_get($cookie,1);
                 AuthorizationCookie::create([
-                    'authorization_id'=>1,
+                    'authorization_id'=>2,
                     'uin'=>'384860859',
                     'key'=>array_get($cookie,0),
                     'value'=>array_get($cookie,1),
                 ]);
+
             }
         }
 

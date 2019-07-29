@@ -278,6 +278,10 @@
             $('.key_'+keyId).css('top',top+'px');
         });
 
+        $('.body').on('click','.not_yz',function(){
+            alert(12321321);
+            //self.location.href=$(this).attr('data-href');
+        });
 
     });
 </script>

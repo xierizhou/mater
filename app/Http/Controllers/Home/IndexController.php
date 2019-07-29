@@ -15,6 +15,8 @@ use App\Models\Material;
 use App\Services\MaterialUrlAnalysisService;
 use App\Services\MaterialDownloadService;
 use App\Models\MaterialFile;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Cookie;
 class IndexController extends Controller
 {
     /**
@@ -22,7 +24,10 @@ class IndexController extends Controller
      * @throws \Throwable
      */
     public function show(){
-
+        //MaterialFile::find(100);
+        //$this->downVarify(MaterialFile::find(100));
+        $html = response($this->downVarify(MaterialFile::find(100)))->getContent();
+        echo $html;exit;
 
         $material = Material::orderBy('state','desc')->get();
 
@@ -77,6 +82,54 @@ class IndexController extends Controller
     }
 
 
+    public function downVarify(MaterialFile $materialFile){
+        $url = 'https://ibaotu.com/index.php?m=downVarify&a=index&id=73688';
+        $channel = Channel::find(4);
+        $client = new Client();
+        $response = $client->request('GET',$url,[
+            'headers'=>[
+                'Cookie'=>$channel->cookie,
+            ],
+        ]);
+
+        $setCookie = $response->getHeader('Set-Cookie');
+        foreach($setCookie as $item){
+            $cookie = explode('=',array_get(explode(';',$item),0));
+            if(array_get($cookie,1)){
+                Cookie::queue(array_get($cookie,0), array_get($cookie,1));
+            }
+
+        }
+        $contents = $response->getBody()->getContents();
+
+        $reg = '/<img src="(.*?)" data-key="(.*?)">/s';
+        preg_match_all($reg,$contents,$match);
+        $key = array_get($match,2);
+
+        $reg = "/<p class=\"tips\">请点击图片中的'<span>(.*?)<\/span>'字<\/p>/s";
+        preg_match($reg,$contents,$match);
+        $value = array_get($match,1);
+
+        return view('home.ibaotu_varify')->with('key',$key)->with('value',$value)->with('item_no',73688);
+
+    }
+
+    public function varify(Request $request){
+        $url = "https://ajax.ibaotu.com/?m=AjaxDownload&a=verifyCaptcha&answer_key={$request->answer_key}&callback=".$request->item_no;
+        $channel = Channel::find(4);
+
+
+        $client = new Client();
+        $response = $client->request('GET',$url,[
+            'headers'=>[
+                'Cookie'=>'answer_key='.Cookie::get('answer_key').';'.$channel->cookie,
+            ],
+        ]);
+        dd($response->getBody()->getContents());
+
+    }
+
+
     /**
      * 显示下载页面
      *
@@ -85,15 +138,18 @@ class IndexController extends Controller
      **/
     public function showDownload(MaterialFile $materialFile){
 
+        $is_yz = '0';
+        foreach($materialFile->attachments as $item){
+            $res = parse_url($item->source);
+            $path = explode('.',$res['path']);
+            if(array_get($path,'1') != 'zip'){
+                $is_yz = '1';
+                break;
+            }
+        }
 
-        /*$url = ;
-        $res = parse_url($url);
-        $path = explode('.',$res['path']);
-        if(array_get($path,'1') != 'zip'){
 
-        }*/
-
-        return view('home.download')->with('data',$materialFile);
+        return view('home.download')->with('data',$materialFile)->with('is_yz',$is_yz);
     }
 
 
