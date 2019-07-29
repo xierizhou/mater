@@ -16,6 +16,11 @@ Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout');
 
 
+Route::get('/auth/qq', 'Auth\QQAuthorizationController@showQR');
+Route::get('/auth/qq/qr_check', 'Auth\QQAuthorizationController@checkSweepCode');
+Route::post('/auth/qq/login_success', 'Auth\QQAuthorizationController@loginSuccess');
+Route::post('/auth/qq/login_gtk', 'Auth\QQAuthorizationController@gtk');
+
 Route::get('/replace', 'Home\ReplaceController@index');
 Route::get('/authorization/qianku', 'Home\AuthorizationLoginController@qianku');
 Route::post('/replace/build', 'Home\ReplaceController@build');
