@@ -38,7 +38,7 @@
 <div class="dl-cot clearfix down-but" style="padding: 40px 0 94px 0px;">
     <div class="yanzheng-wrap">
         <h3>请您先完成验证后继续下载</h3>
-        <p data-item-no="{{ $item_no }}" class="tips">请点击图片中的'<span>{{ $value }}</span>'字</p>
+        <p data-item-no="{{ $item_no }}" data-ver-id="{{ array_get($ver,'answer_key') }}" class="tips">请点击图片中的'<span>{{ $value }}</span>'字</p>
         <div class="imgs-wrap">
              @foreach($key as $v)
             <img src="//ibaotu.com/index.php?m=downVarify&amp;a=renderCode&amp;k={{ $v }}" data-key="{{ $v }}" />
@@ -57,9 +57,12 @@
     $('.imgs-wrap').on('click','img',function(){
         var answer_key = $(this).attr('data-key');
         var item_no = $('.tips').attr('data-item-no');
-        $.get('{{ url('ibaout/varify') }}?answer_key='+answer_key+'&item_no='+item_no,function(data){
-            console.log(data);
-        });
+        var ver_id = $('.tips').attr('data-ver-id');
+        $.get('{{ url('ibaout/varify') }}?answer_key='+answer_key+'&item_no='+item_no+'&ver_id='+ver_id,function(data){
+            if(data.status != 1){
+                alert(data.info);
+            }
+        },'json');
     });
 </script>
 </html>

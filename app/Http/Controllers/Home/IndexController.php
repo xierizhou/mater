@@ -81,7 +81,11 @@ class IndexController extends Controller
         }
     }
 
-
+    /**
+     * @param MaterialFile $materialFile
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function downVarify(MaterialFile $materialFile){
         $url = 'https://ibaotu.com/index.php?m=downVarify&a=index&id=73688';
         $channel = Channel::find(4);
@@ -93,13 +97,16 @@ class IndexController extends Controller
         ]);
 
         $setCookie = $response->getHeader('Set-Cookie');
+        $verCookie = [];
         foreach($setCookie as $item){
             $cookie = explode('=',array_get(explode(';',$item),0));
             if(array_get($cookie,1)){
-                Cookie::queue(array_get($cookie,0), array_get($cookie,1));
+                //Cookie::queue(array_get($cookie,0), array_get($cookie,1));
+                $verCookie[array_get($cookie,0)] = array_get($cookie,1);
             }
 
         }
+
         $contents = $response->getBody()->getContents();
 
         $reg = '/<img src="(.*?)" data-key="(.*?)">/s';
@@ -110,10 +117,15 @@ class IndexController extends Controller
         preg_match($reg,$contents,$match);
         $value = array_get($match,1);
 
-        return view('home.ibaotu_varify')->with('key',$key)->with('value',$value)->with('item_no',73688);
+        return view('home.ibaotu_varify')->with('key',$key)->with('value',$value)->with('item_no',73688)->with('ver',$verCookie);
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function varify(Request $request){
         $url = "https://ajax.ibaotu.com/?m=AjaxDownload&a=verifyCaptcha&answer_key={$request->answer_key}&callback=".$request->item_no;
         $channel = Channel::find(4);
@@ -122,11 +134,11 @@ class IndexController extends Controller
         $client = new Client();
         $response = $client->request('GET',$url,[
             'headers'=>[
-                'Cookie'=>'answer_key='.Cookie::get('answer_key').';'.$channel->cookie,
+                'Cookie'=>'answer_key='.$request->ver_id.';'.$channel->cookie,
             ],
         ]);
-        dd($response->getBody()->getContents());
-
+        $response = json_decode($response->getBody()->getContents(),true);
+        return response()->json($response);
     }
 
 
