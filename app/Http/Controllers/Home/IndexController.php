@@ -85,7 +85,8 @@ class IndexController extends Controller
      */
     public function downVarify(Request $request){
         $item_no = MaterialUrlAnalysisService::parseUrlItemNo($request->url);
-        $url = 'https://ibaotu.com/index.php?m=downVarify&a=index&id='.$item_no;
+
+        $url = 'https://ibaotu.com/index.php?m=downVarify&a=index&id='.$item_no.'&kwd%20=';
         $channel = Channel::find(4);
         $client = new Client();
         $response = $client->request('GET',$url,[
@@ -124,13 +125,15 @@ class IndexController extends Controller
      */
     public function varify(Request $request){
         $url = "https://ajax.ibaotu.com/?m=AjaxDownload&a=verifyCaptcha&answer_key={$request->answer_key}&callback=".$request->item_no;
+
         $channel = Channel::find(4);
-
-
         $client = new Client();
         $response = $client->request('GET',$url,[
             'headers'=>[
-                'Cookie'=>'answer_key='.$request->ver_id.';'.$channel->cookie,
+                'Cookie'=>'answer_key='.$request->ver_id.';auth_id=22949972%7C%7C1565786347%7Ca8c64b984d2c43d9e39f8f3311708f58',
+                'Referer'=>'https://ibaotu.com/index.php?m=downVarify&a=index&id='.$request->item_no.'&kwd%20=',
+                'Origin'=>'https://ibaotu.com',
+
             ],
         ]);
         $response = json_decode($response->getBody()->getContents(),true);

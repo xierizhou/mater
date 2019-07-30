@@ -207,7 +207,7 @@
                 fixed: false, //不固定
                 maxmin: false,
                 title:false,
-                content: '{{ url("/ibaout/varify/show") }}'
+                content: '{{ url("/ibaout/varify/show") }}?url='+url,
             });
             return false;
 
