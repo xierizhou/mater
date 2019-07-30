@@ -200,44 +200,18 @@
                 });
                 return false;
             }
-            var load = null;
-            $.ajax({
-                url:"{{ url('build') }}",    //请求的url地址
-                dataType:"json",   //返回格式为json
-                async:true,//请求是否异步，默认为异步，这也是ajax重要特性
-                data:{url:url,_token:"{{ csrf_token() }}"},
-                type:"POST",
-                beforeSend:function(){
-                    $('.submit').attr({ disabled: "disabled" })
-                    load = layer.load(2,{
-                        shade: [0.5] //0.1透明度的白色背景
-                    });
-                },
-                success:function(req){
-                    layer.open({
-                        type: 1,
-                        title: false,
-                        closeBtn: 1,
-                        area:"500px",
-                        shadeClose: false,
-                        content: req.data
-                    });
 
-                    if(!req.is_decrease){
-                        //layer.msg("检测到您下载过该素材，本次解析将不扣除次数");
-                    }
-
-                },
-                complete:function(){
-                    //请求完成的处理
-                    $(".submit").removeAttr("disabled");
-                    layer.close(load);
-                },
-                error:function(data){
-                    console.log(data.responseJSON.message);
-                    layer.msg(data.responseJSON.message);
-                }
+            layer.open({
+                type: 2,
+                area: ['700px', '550px'],
+                fixed: false, //不固定
+                maxmin: false,
+                title:false,
+                content: '{{ url("/ibaout/varify/show") }}'
             });
+            return false;
+
+
 
         });
 
@@ -278,12 +252,52 @@
             $('.key_'+keyId).css('top',top+'px');
         });
 
-        $('.body').on('click','.not_yz',function(){
-            alert(12321321);
-            //self.location.href=$(this).attr('data-href');
-        });
+
+
 
     });
+
+    function build(){
+        var url = $("input[name='url']").val();
+        var load = null;
+        $.ajax({
+            url:"{{ url('build') }}",    //请求的url地址
+            dataType:"json",   //返回格式为json
+            async:true,//请求是否异步，默认为异步，这也是ajax重要特性
+            data:{url:url,_token:"{{ csrf_token() }}"},
+            type:"POST",
+            beforeSend:function(){
+                $('.submit').attr({ disabled: "disabled" })
+                load = layer.load(2,{
+                    shade: [0.5] //0.1透明度的白色背景
+                });
+            },
+            success:function(req){
+                layer.open({
+                    type: 1,
+                    title: false,
+                    closeBtn: 1,
+                    area:"500px",
+                    shadeClose: false,
+                    content: req.data
+                });
+
+                if(!req.is_decrease){
+                    //layer.msg("检测到您下载过该素材，本次解析将不扣除次数");
+                }
+
+            },
+            complete:function(){
+                //请求完成的处理
+                $(".submit").removeAttr("disabled");
+                layer.close(load);
+            },
+            error:function(data){
+                console.log(data.responseJSON.message);
+                layer.msg(data.responseJSON.message);
+            }
+        });
+    }
 </script>
 <script src="{{ url('js/Verification.js') }}"></script>
 <script src="//g.alicdn.com/sd/nvc/1.1.112/guide.js"></script>

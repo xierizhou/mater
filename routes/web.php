@@ -29,7 +29,7 @@ Route::group(['middleware' => 'auth','namespace'=>'Home'], function () {
     Route::get('/', 'IndexController@show')->name('home');
     Route::get('/ibaout/varify', 'IndexController@varify');
     Route::post('/build', 'IndexController@build')->middleware("auth.user.download");
-
+    Route::get('/ibaout/varify/show', 'IndexController@downVarify');
 });
 
 

@@ -47,13 +47,13 @@
     </div>
 </div>
 </body>
-<script src="js/jquery.min.js"></script>
+<script src="{{url('js/jquery.min.js')}}"></script>
 <script>
     $('.imgs-wrap img').mouseover(function(){
         $(this).css('border','1px solid #ff8a00');
         $(this).siblings().css('border','1px solid transparent');
     });
-
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
     $('.imgs-wrap').on('click','img',function(){
         var answer_key = $(this).attr('data-key');
         var item_no = $('.tips').attr('data-item-no');
@@ -61,6 +61,9 @@
         $.get('{{ url('ibaout/varify') }}?answer_key='+answer_key+'&item_no='+item_no+'&ver_id='+ver_id,function(data){
             if(data.status != 1){
                 alert(data.info);
+            }else{
+                parent.layer.close(index);
+                parent.build();
             }
         },'json');
     });

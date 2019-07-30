@@ -26,8 +26,7 @@ class IndexController extends Controller
     public function show(){
         //MaterialFile::find(100);
         //$this->downVarify(MaterialFile::find(100));
-        $html = response($this->downVarify(MaterialFile::find(100)))->getContent();
-        echo $html;exit;
+
 
         $material = Material::orderBy('state','desc')->get();
 
@@ -38,12 +37,10 @@ class IndexController extends Controller
     }
 
     /**
-     * 素材解析下载
-     *
      * @param Request $request
-     * @throws \Exception
-     * @return
-     **/
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function build(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -82,12 +79,13 @@ class IndexController extends Controller
     }
 
     /**
-     * @param MaterialFile $materialFile
+     * @param Request $request
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function downVarify(MaterialFile $materialFile){
-        $url = 'https://ibaotu.com/index.php?m=downVarify&a=index&id=73688';
+    public function downVarify(Request $request){
+        $item_no = MaterialUrlAnalysisService::parseUrlItemNo($request->url);
+        $url = 'https://ibaotu.com/index.php?m=downVarify&a=index&id='.$item_no;
         $channel = Channel::find(4);
         $client = new Client();
         $response = $client->request('GET',$url,[
@@ -116,9 +114,7 @@ class IndexController extends Controller
         $reg = "/<p class=\"tips\">请点击图片中的'<span>(.*?)<\/span>'字<\/p>/s";
         preg_match($reg,$contents,$match);
         $value = array_get($match,1);
-
-        return view('home.ibaotu_varify')->with('key',$key)->with('value',$value)->with('item_no',73688)->with('ver',$verCookie);
-
+        return view('home.ibaotu_varify')->with('key',$key)->with('value',$value)->with('item_no',$item_no)->with('ver',$verCookie);
     }
 
     /**
