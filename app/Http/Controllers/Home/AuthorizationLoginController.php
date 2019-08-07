@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Home;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Mail;
 class AuthorizationLoginController extends Controller
 {
     /**
@@ -14,12 +14,16 @@ class AuthorizationLoginController extends Controller
      */
     public function qianku(){
 
+
+
+
+
         $url = 'https://graph.qq.com/oauth2.0/authorize';
         $client = new Client();
         $res = $client->request('POST',$url,[
             'headers'=>[
                 'Content-Type'=>'application/x-www-form-urlencoded',
-                'Cookie'=>'p_uin=o0932188443; pt4_token=pZvixj-c87HDh5puegzRJMh140FUsMM1clov5eHC0Yk_; p_skey=-ptwZJb8asnobKKHBrpi1X9jhllDEMTZIJ3oifidb38_',
+                'Cookie'=>'p_uin=o0384860859; p_skey=UPleTefdvHuUZsMr00ljY7x8zqSD6AENju0jjgMwF90_',
                 'Host'=>'graph.qq.com',
                 'Origin'=>'https://graph.qq.com',
                 'Referer'=>'https://graph.qq.com/oauth2.0/show?which=Login&display=pc&client_id=101252414&redirect_uri=https%3A%2F%2F588ku.com%2Fdlogin%2Fcallback%2Fqq&response_type=code&scope=get_user_info%2Cadd_share%2Cadd_pic_t',
@@ -35,16 +39,30 @@ class AuthorizationLoginController extends Controller
                 'src'=>1,
                 'update_auth'=>1,
                 'openapi'=>'80901010',
-                'g_tk'=>1256528630,
-                'auth_time'=>'1564401638106',
+                'g_tk'=>1050442064,
+                'auth_time'=>time()*1000,
                 //'ui'=>'BC4D7ACF-D96A-47CB-91D6-F048669D8A00',
             ],
             'allow_redirects'=>false,
         ]);
         $location = $res->getHeader('Location');
+        dd($location);
+        /*$parse = parse_url(array_get($location,0));
+        if($parse['host'] == 'graph.qq.com'){
+            $to = '384860859@qq.com';
+            $subject = "失效";
+            Mail::send(
+                'emails.test',
+                [],
+                function ($message) use($to, $subject) {
+                    $message->to($to)->subject($subject);
+                }
+            );
+        }*/
+        /*dd($parse);
         echo array_get($location,0);exit;
         dd($location);
-        return view('home.authorization.qianku')->with('localhost',array_get($location,0));
+        return view('home.authorization.qianku')->with('localhost',array_get($location,0));*/
     }
 
 

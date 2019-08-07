@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67bc587c6a5ba350b07acdc326093cea",
+    "content-hash": "1e9617aaf598177750948468d68d5201",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -1555,6 +1555,67 @@
             "time": "2019-06-05T08:34:23+00:00"
         },
         {
+            "name": "laramall/laravel-system-info",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bluetoothswh/LaravelSystemInfo.git",
+                "reference": "7d1331d19c8843e932240ace4a7feeafe0ca1aa5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bluetoothswh/LaravelSystemInfo/zipball/7d1331d19c8843e932240ace4a7feeafe0ca1aa5",
+                "reference": "7d1331d19c8843e932240ace4a7feeafe0ca1aa5",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "linfo/linfo": "^3.0",
+                "php": ">=7.0"
+            },
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LaraMall\\Admin\\Sysinfo\\SysinfoServiceProvider"
+                    ],
+                    "aliases": {
+                        "Sysinfo": "LaraMall\\Admin\\Sysinfo\\Facades\\Sysinfo"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LaraMall\\Admin\\Sysinfo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Sun",
+                    "role": "Developer",
+                    "email": "bluetooth_swh@163.com",
+                    "homepage": "https://larashuo.com"
+                }
+            ],
+            "description": "查看服务器所有信息 system info",
+            "homepage": "https://github.com/bluetoothswh/LaravelSystemInfo.git",
+            "keywords": [
+                "laravel5.5",
+                "laravle后台组件",
+                "system info"
+            ],
+            "time": "2017-10-26T14:53:59+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v5.5.46",
             "source": {
@@ -1852,6 +1913,65 @@
                 "storage"
             ],
             "time": "2019-06-18T20:09:29+00:00"
+        },
+        {
+            "name": "linfo/linfo",
+            "version": "v3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jrgp/linfo.git",
+                "reference": "6a0c9ef7766985a82b1c85cb427319c1018bd416"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jrgp/linfo/zipball/6a0c9ef7766985a82b1c85cb427319c1018bd416",
+                "reference": "6a0c9ef7766985a82b1c85cb427319c1018bd416",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.*"
+            },
+            "suggest": {
+                "ext-com": "On Windows"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Linfo\\": "src/Linfo"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Joe Gillotti",
+                    "role": "Author",
+                    "email": "joe@joegillotti.com",
+                    "homepage": "http://joegillotti.com"
+                }
+            ],
+            "description": "App and library for easily parsing and displaying system information of the host, like network/torrents/cpu/memory/usb/pci/sound cards/filesystems/raid array/ipmi/etc.",
+            "homepage": "http://github.com/jrgp/linfo",
+            "keywords": [
+                "CPU",
+                "health",
+                "linux",
+                "specs",
+                "system"
+            ],
+            "time": "2018-03-31T03:55:28+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -6021,7 +6141,7 @@
                 "shasum": "",
                 "mirrors": [
                     {
-                        "url": "https://dl.laravel-china.org/%package%/%reference%.%type%",
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
                         "preferred": true
                     }
                 ]

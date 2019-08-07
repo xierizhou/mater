@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use LaraMall\Admin\Sysinfo\Sysinfo;
 
 class IndexController extends Controller
 {
@@ -25,6 +26,7 @@ class IndexController extends Controller
      */
     public function welcome()
     {
+        //Sysinfo::
         return view("admin.welcome");
     }
 
