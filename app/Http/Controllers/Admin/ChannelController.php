@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Grade;
 use App\Models\MaterialFile;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,9 +13,12 @@ class ChannelController extends Controller
 {
     private $channel;
 
-    public function __construct(Channel $channel)
+    private $grade;
+
+    public function __construct(Channel $channel,Grade $grade)
     {
         $this->channel = $channel;
+        $this->grade = $grade;
     }
 
     /**

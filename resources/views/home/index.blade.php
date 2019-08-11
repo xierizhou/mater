@@ -176,6 +176,8 @@
 <script src="js/jquery.min.js"></script>
 <script src="x-admin/lib/layui/layui.js"></script>
 <script>
+    var pic_no = 0;
+    var is_yz = 0;
     layui.use(['layer'], function(){
         var layer = layui.layer;
 
@@ -258,6 +260,7 @@
     });
 
     function build(){
+
         var url = $("input[name='url']").val();
         var load = null;
         $.ajax({

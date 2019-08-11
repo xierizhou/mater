@@ -76,16 +76,3 @@ function yourRegisterRequest(url, params,src){
 
 }
 
-//var down =  new down()
-$('body').on('click','.yz',function(){
-    var src = $(this).attr("data-href");
-    var is_yz = $(this).attr("data-is-yz");
-
-    if(is_yz>0){
-        var params = 'pc=' + getNVCVal()
-        yourRegisterRequest("https://ibaotu.com/?m=downloadopen&a=exposeVerification", params ,src)
-    }else {
-        self.location.href = src
-    }
-
-})

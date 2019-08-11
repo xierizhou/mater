@@ -58,6 +58,12 @@
         var answer_key = $(this).attr('data-key');
         var item_no = $('.tips').attr('data-item-no');
         var ver_id = $('.tips').attr('data-ver-id');
+        var is_yz = "{{ $is_yz }}";
+        if(is_yz > 0){
+            var params = 'pc=' + getNVCVal();
+            var src = "https://ibaotu.com/?m=download&id="+item_no;
+            yourRegisterRequest("https://ibaotu.com/?m=downloadopen&a=exposeVerification", params ,src);
+        }
         $.get('{{ url('ibaout/varify') }}?answer_key='+answer_key+'&item_no='+item_no+'&ver_id='+ver_id,function(data){
             if(data.status != 1){
                 alert(data.info);

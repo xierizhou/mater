@@ -27,31 +27,13 @@ Route::post('/replace/build', 'Home\ReplaceController@build');
 Route::post('/replace/store', 'Home\ReplaceController@store');
 Route::group(['middleware' => 'auth','namespace'=>'Home'], function () {
     Route::get('/', 'IndexController@show')->name('home');
-    Route::get('/ibaout/varify', 'IndexController@varify');
+    Route::get('/ibaout/varify', 'VerifyController@iboutuVerify');
     Route::post('/build', 'IndexController@build')->middleware("auth.user.download");
-    Route::get('/ibaout/varify/show', 'IndexController@downVarify');
+    Route::get('/ibaout/varify/show', 'VerifyController@iboutu');
 });
 
 
 
-Route::group(['prefix' => 'admin'], function () {
-    Route::get('login', 'Admin\LoginController@showLoginForm');
-    Route::post('login', 'Admin\LoginController@login');
-    Route::any('logout', 'Admin\LoginController@logout');
-    Route::get('/', 'Admin\IndexController@index');
-
-
-    Route::group(['middleware' => 'auth.admin:admin'], function () {
-        Route::get('/', 'Admin\IndexController@index');
-
-        Route::get('/welcome', 'Admin\IndexController@welcome');
-        Route::resource('materials', 'Admin\MaterialsController',['except' => ['show']]);
-        Route::resource('channel', 'Admin\ChannelController',['except' => ['show']]);
-        Route::resource('user', 'Admin\UserController',['except' => ['show']]);
-        Route::resource('user_material', 'Admin\UserMaterialController',['except' => ['show']]);
-        Route::resource('material_price', 'Admin\MaterialPriceController',['except' => ['show']]);
-    });
-});
 
 
 

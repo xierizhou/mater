@@ -51,7 +51,7 @@
                         <div class="layui-card-header">
                             {{--<button class="layui-btn layui-btn-danger" onclick="delAll()">
                                 <i class="layui-icon"></i>批量删除</button>--}}
-                            <button class="layui-btn" onclick="xadmin.open('添加渠道','{{ url('admin/channel/create') }}',800,600)">
+                            <button class="layui-btn" onclick="xadmin.open('添加价格','{{ url('admin/material_price/create') }}',800,600)">
                                 <i class="layui-icon"></i>添加</button></div>
                         <div class="layui-card-body ">
                             <table class="layui-table layui-form">

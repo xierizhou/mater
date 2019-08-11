@@ -53,7 +53,10 @@
                             {{--<button class="layui-btn layui-btn-danger" onclick="delAll()">
                                 <i class="layui-icon"></i>批量删除</button>--}}
                             <button class="layui-btn" onclick="xadmin.open('添加渠道','{{ url('admin/channel/create') }}',800,600)">
-                                <i class="layui-icon"></i>添加</button></div>
+                                <i class="layui-icon"></i>添加</button>
+                            <button class="layui-btn" onclick="xadmin.open('添加渠道','{{ url('admin/channel/create') }}',800,600)">
+                                <i class="layui-icon"></i>添加渠道账号</button>
+                        </div>
                         <div class="layui-card-body ">
                             <table class="layui-table layui-form">
                                 <thead>
@@ -62,9 +65,8 @@
                                         <th>渠道名称</th>
                                         <th>渠道别名</th>
                                         <th>渠道地址</th>
-                                        <th>登录用户名</th>
-                                        <th>密码</th>
                                         <th>渠道下载量</th>
+                                        <th>渠道账号量</th>
                                         <th>状态</th>
                                         <th>创建时间</th>
                                         <th>操作</th></tr>
@@ -77,7 +79,6 @@
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->alias_name }}</td>
                                         <td><a target="_blank" href="{{ $item->domain }}">{{ $item->domain }}</a></td>
-                                        <td>{{ $item->username }}</td>
                                         <td>{{ $item->password }}</td>
                                         <td>0</td>
                                         <td>{{ $item->state?"正常":"停用" }}</td>

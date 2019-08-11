@@ -24,12 +24,7 @@ class IndexController extends Controller
      * @throws \Throwable
      */
     public function show(){
-        //MaterialFile::find(100);
-        //$this->downVarify(MaterialFile::find(100));
-
-
         $material = Material::orderBy('state','desc')->get();
-
         $userMaterial = UserMaterial::where('user_id',auth()->user()->id)->where('status',1)->get()->keyBy('material_id');
         return view('home.index')
             ->with('material',$material)
@@ -78,67 +73,6 @@ class IndexController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function downVarify(Request $request){
-        $item_no = MaterialUrlAnalysisService::parseUrlItemNo($request->url);
-
-        $url = 'https://ibaotu.com/index.php?m=downVarify&a=index&id='.$item_no.'&kwd%20=';
-        $channel = Channel::find(4);
-        $client = new Client();
-        $response = $client->request('GET',$url,[
-            'headers'=>[
-                'Cookie'=>$channel->cookie,
-            ],
-        ]);
-
-        $setCookie = $response->getHeader('Set-Cookie');
-        $verCookie = [];
-        foreach($setCookie as $item){
-            $cookie = explode('=',array_get(explode(';',$item),0));
-            if(array_get($cookie,1)){
-                //Cookie::queue(array_get($cookie,0), array_get($cookie,1));
-                $verCookie[array_get($cookie,0)] = array_get($cookie,1);
-            }
-
-        }
-
-        $contents = $response->getBody()->getContents();
-
-        $reg = '/<img src="(.*?)" data-key="(.*?)">/s';
-        preg_match_all($reg,$contents,$match);
-        $key = array_get($match,2);
-
-        $reg = "/<p class=\"tips\">请点击图片中的'<span>(.*?)<\/span>'字<\/p>/s";
-        preg_match($reg,$contents,$match);
-        $value = array_get($match,1);
-        return view('home.ibaotu_varify')->with('key',$key)->with('value',$value)->with('item_no',$item_no)->with('ver',$verCookie);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function varify(Request $request){
-        $url = "https://ajax.ibaotu.com/?m=AjaxDownload&a=verifyCaptcha&answer_key={$request->answer_key}&callback=".$request->item_no;
-
-        $channel = Channel::find(4);
-        $client = new Client();
-        $response = $client->request('GET',$url,[
-            'headers'=>[
-                'Cookie'=>'answer_key='.$request->ver_id.';auth_id=22949972%7C%7C1565786347%7Ca8c64b984d2c43d9e39f8f3311708f58',
-                'Referer'=>'https://ibaotu.com/index.php?m=downVarify&a=index&id='.$request->item_no.'&kwd%20=',
-                'Origin'=>'https://ibaotu.com',
-
-            ],
-        ]);
-        $response = json_decode($response->getBody()->getContents(),true);
-        return response()->json($response);
-    }
 
 
     /**
@@ -149,18 +83,7 @@ class IndexController extends Controller
      **/
     public function showDownload(MaterialFile $materialFile){
 
-        $is_yz = '0';
-        foreach($materialFile->attachments as $item){
-            $res = parse_url($item->source);
-            $path = explode('.',$res['path']);
-            if(array_get($path,'1') != 'zip'){
-                $is_yz = '1';
-                break;
-            }
-        }
-
-
-        return view('home.download')->with('data',$materialFile)->with('is_yz',$is_yz);
+        return view('home.download')->with('data',$materialFile);
     }
 
 
