@@ -1,45 +1,82 @@
 @extends('admin.app')
-@section('title', '修改素材网站')
+@section('title', '编辑渠道账号')
 @section('content')
     <body>
         <div class="layui-fluid">
             <div class="layui-row">
-                <form class="layui-form" method="POST" action="{{ url('admin/channel') }}/{{ $data->id }}">
+                <form class="layui-form" method="POST" action="{{ url('admin/channel_account') }}/{{ $data->id }}">
                     {{ csrf_field() }}
                     {{ method_field('PUT') }}
                     <div class="layui-form-item">
-                        <label for="username" class="layui-form-label">
-                            <span class="x-red">*</span>名称</label>
+                        <label for="channel_id" class="layui-form-label">
+                            下载渠道</label>
                         <div class="layui-input-inline">
-                            <input type="text" value="{{ $data->name }}" name="name" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label for="username" class="layui-form-label">
-                            <span class="x-red">*</span>别名</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value="{{ $data->alias_name }}" name="alias_name" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
-                    </div>
-
-                    <div class="layui-form-item">
-                        <label for="username" class="layui-form-label">
-                            <span class="x-red">*</span>URL地址</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value="{{ $data->domain }}" name="domain" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
-                    </div>
-
-
-
-
-                    <div class="layui-form-item">
-                        <label for="username" class="layui-form-label">
-                            <span class="x-red">*</span>状态</label>
-                        <div class="layui-input-inline">
-                            <select name="state" lay-filter="state">
-                                <option {{ $data->state == 1?"selected":"" }} value="1">正常</option>
-                                <option {{ $data->state?"":"selected" }} value="0">停用</option>
+                            <select name="channel_id" >
+                                @foreach($channel as $item)
+                                <option {{ $data->channel_id == $item->id?"selected":"" }} value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
+
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            登录账号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" value="{{ $data->username }}" name="username" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            登录密码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" value="{{ $data->password }}" name="password" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            其他方式登录</label>
+                        <div class="layui-input-inline">
+                            <input type="text" value="{{ $data->extra }}" name="extra" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            状态</label>
+                        <div class="layui-input-inline">
+                            <select name="status" lay-filter="state">
+                                <option {{ $data->status?"selected":"" }} value="1">正常</option>
+                                <option {{ $data->status?"":"selected" }} value="0">停用</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">下载权限</label>
+                        <div class="layui-input-block">
+                            <table class="layui-table">
+
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>素材网</th>
+                                    <th>总下载量</th>
+                                    <th>每日重置量（0表示不重置）</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($material as $item)
+                                <tr>
+                                    <td><input type="checkbox" {{ array_has($auth,$item->id)?"checked":"" }} name="material_ids[]" value="{{ $item->id }}" lay-skin="primary" ></td>
+                                    <td>{{ $item->name }}</td>
+                                    <td><input type="text" value="{{ array_has($auth,$item->id)?array_get($auth,$item->id.'.total'):"" }}" name="auth[{{ $item->id }}][total]" autocomplete="off" class="layui-input"></td>
+                                    <td><input type="text" value="{{ array_has($auth,$item->id)?array_get($auth,$item->id.'.reset_number'):"0" }}" name="auth[{{ $item->id }}][reset_number]" autocomplete="off" value="0" class="layui-input"></td>
+                                </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
 
                     <div class="layui-form-item">
                         <label for="L_repass" class="layui-form-label"></label>
@@ -55,21 +92,6 @@
                 layer = layui.layer;
 
 
-
-                //自定义验证规则
-                form.verify({
-                    nikename: function(value) {
-                        if (value.length < 5) {
-                            return '昵称至少得5个字符啊';
-                        }
-                    },
-                    pass: [/(.+){6,12}$/, '密码必须6到12位'],
-                    repass: function(value) {
-                        if ($('#L_pass').val() != $('#L_repass').val()) {
-                            return '两次密码不一致';
-                        }
-                    }
-                });
 
                 //监听提交
                 form.on('submit(edit)', function(data) {

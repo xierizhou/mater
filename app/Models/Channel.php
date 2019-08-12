@@ -38,8 +38,10 @@ class Channel extends Model
         'name','alias_name','domain','username','password','state'
     ];
 
-    public function cookies()
+    public function account()
     {
-        return $this->hasMany(ChannelCookie::class);
+        return $this->hasMany(ChannelAccount::class);
     }
+
+
 }

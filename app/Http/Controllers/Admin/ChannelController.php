@@ -41,7 +41,7 @@ class ChannelController extends Controller
         }
 
 
-        $data = $this->channel->paginate(10);
+        $data = $this->channel->withCount('account')->paginate(10);
         return view('admin.channel.index')->withData($data);
     }
 
@@ -68,7 +68,7 @@ class ChannelController extends Controller
         if($this->channel->create($insert)){
             return response()->json(['status_code'=>200,'message'=>'添加成功']);
         }else{
-            return response()->json(['status_code'=>400,'message'=>'添加成功'],400);
+            return response()->json(['status_code'=>400,'message'=>'添加失败'],400);
         }
     }
 
@@ -113,10 +113,9 @@ class ChannelController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function destroy($id)
     {

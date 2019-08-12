@@ -54,7 +54,7 @@
                                 <i class="layui-icon"></i>批量删除</button>--}}
                             <button class="layui-btn" onclick="xadmin.open('添加渠道','{{ url('admin/channel/create') }}',800,600)">
                                 <i class="layui-icon"></i>添加</button>
-                            <button class="layui-btn" onclick="xadmin.open('添加渠道','{{ url('admin/channel/create') }}',800,600)">
+                            <button class="layui-btn" onclick="xadmin.open('添加渠道','{{ url('admin/channel_account/create') }}',800,600)">
                                 <i class="layui-icon"></i>添加渠道账号</button>
                         </div>
                         <div class="layui-card-body ">
@@ -79,8 +79,8 @@
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->alias_name }}</td>
                                         <td><a target="_blank" href="{{ $item->domain }}">{{ $item->domain }}</a></td>
-                                        <td>{{ $item->password }}</td>
                                         <td>0</td>
+                                        <td><a onclick="xadmin.open('{{$item->name}}-账号列表','{{ url('admin/channel_account') }}?channel_id={{ $item->id }}')" style="color:#2196F3" href="javascript:;">{{ $item->account_count }}</a></td>
                                         <td>{{ $item->state?"正常":"停用" }}</td>
                                         <td>{{ $item->created_at }}</td>
                                         <td class="td-manage">

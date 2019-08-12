@@ -6,7 +6,7 @@
         <div class="x-nav">
             <span class="layui-breadcrumb">
                 <a href="">首页</a>
-                <a><cite>渠道列表</cite></a>
+                <a><cite>下载账号列表</cite></a>
             </span>
             <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
                 <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
@@ -16,7 +16,7 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-body ">
+                        {{--<div class="layui-card-body ">
                             <form class="layui-form layui-col-space5">
 
 
@@ -27,9 +27,9 @@
                                         <i class="layui-icon">&#xe615;</i></button>
                                 </div>
                             </form>
-                        </div>
+                        </div>--}}
                         <div class="layui-card-header">
-                            <button class="layui-btn" onclick="xadmin.open('添加账号','{{ url('admin/channel/create') }}',800,600)">
+                            <button class="layui-btn" onclick="xadmin.open('添加账号','{{ url('admin/channel_account/create') }}?channel_id={{ request('channel_id') }}',800,600)">
                                 <i class="layui-icon"></i>添加账号</button>
                         </div>
                         <div class="layui-card-body ">
@@ -51,11 +51,12 @@
                                         <td>{{ ++$kk }}</td>
                                         <td>{{ $item->username }}</td>
                                         <td>{{ $item->password }}</td>
+                                        <td>{{ $item->extra }}</td>
                                         <td>{{ $item->status?"正常":"停用" }}</td>
                                         <td>{{ $item->created_at }}</td>
                                         <td class="td-manage">
                                             {{--<a title="下载" onclick="xadmin.open('编辑','{{ url('admin/channel/'.$item->id.'/edit') }}',800,600)" href="javascript:;"><i class="icon iconfont">&#xe714;</i></a>--}}
-                                            <a title="查看" onclick="xadmin.open('编辑','{{ url('admin/channel/'.$item->id.'/edit') }}',800,600)" href="javascript:;"><i class="layui-icon">&#xe63c;</i></a>
+                                            <a title="查看" onclick="xadmin.open('编辑','{{ url('admin/channel_account/'.$item->id.'/edit') }}',800,600)" href="javascript:;"><i class="layui-icon">&#xe63c;</i></a>
 
                                             <a title="删除" onclick="member_del(this,'{{ $item->id }}')" href="javascript:;"><i class="layui-icon">&#xe640;</i></a>
                                         </td>
@@ -64,9 +65,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="layui-card-body ">
-                            {{ $data->appends(['name'=>request('name'),'state'=>request('state')])->links() }}
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -124,7 +123,7 @@
             function(index) {
                 //发异步删除数据
                 $.ajax({
-                    url:"{{ url('admin/channel') }}/"+id,
+                    url:"{{ url('admin/channel_account') }}/"+id,
                     method:'post',
                     data:{"_method":"delete","_token":"{{ csrf_token() }}"},
                     dataType:'json',
