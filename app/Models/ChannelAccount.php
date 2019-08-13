@@ -16,4 +16,8 @@ class ChannelAccount extends Model
     {
         return $this->hasMany(ChannelAccountAuth::class);
     }
+
+    public function cookie(){
+        return $this->hasMany(ChannelAccountCookie::class);
+    }
 }

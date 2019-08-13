@@ -6,6 +6,9 @@ namespace App\Services;
 
 use App\Jobs\DownloadMaterialJob;
 use App\Models\Channel;
+use App\Models\ChannelAccount;
+use App\Models\ChannelAccountAuth;
+use App\Models\Material;
 use App\Models\MaterialFile;
 use App\Models\MaterialFileAttachments;
 use App\Services\Interfaces\ChannelInterface;
@@ -22,31 +25,51 @@ class ChannelService implements ChannelInterface
 
     private $channel;
 
+    private $material;
+
     private function __clone(){}
 
-    static public function getInstance(Channel $channel){
+    static public function getInstance(Material $material){
         if (!self::$instance instanceof self) {
-            self::$instance = new self($channel);
+            self::$instance = new self($material);
         }
         return self::$instance;
     }
 
     /**
      * ChannelService constructor.
-     * @param Channel $channel
+     * @param Material $material
      * @throws \Exception
      */
-    private function __construct(Channel $channel)
+    private function __construct(Material $material)
     {
         $config = config('channel');
+        $this->material = $material;
 
-        $this->channel = $channel;
-        if(array_has($config,$channel->alias_name)){
-            $class = array_get($config,$channel->alias_name);
-            $this->object = new $class($channel);
+
+        $auth = $this->autoChannelAccountAuth();
+
+        $account = $auth->account;
+
+        $this->channel = Channel::find($account->channel_id);
+
+
+
+        if(array_has($config,$this->channel->alias_name)){
+            $class = array_get($config,$this->channel->alias_name);
+            $this->object = new $class($this->channel,$account,$auth);
         }else{
-            throw new \Exception("未找到".$channel->name."通道");
+            throw new \Exception("未找到".$this->channel->name."通道");
         }
+    }
+
+    /**
+     * 自动获取下载素材的通道以及账号.权限
+     */
+    public function autoChannelAccountAuth(){
+        $auth = ChannelAccountAuth::where('material_id',$this->material->id)->where('current','>',0)->where('status',1)->first();
+
+        return $auth;
     }
 
     /**
@@ -76,35 +99,16 @@ class ChannelService implements ChannelInterface
     {
 
         //提取下载文件中的编号
-        $item_no = MaterialUrlAnalysisService::parseUrlItemNo($url);
-
-        $material = MaterialUrlAnalysisService::getBuildMaterial($url);
+        //$item_no = MaterialUrlAnalysisService::parseUrlItemNo($url);
 
 
-        $file = MaterialFile::where('material_id',$material->id)->where('item_no',$item_no)->first();
-
-        if($file){
-            $return = true;
-            foreach($file->attachments as $val){
-                if(!$val->oss){
-                    $return = false;
-                    break;
-                }
-                $val->path = AliOssService::getInstance()->getObject($val->oss);
-                $val->save();
-
-            }
-            if($return){
-                return $file;
-            }
-
-        }
-
+        //$file = MaterialFile::where('material_id',$this->material->id)->where('item_no',$item_no)->first();
 
         $source = $this->object->download($url);
 
         try{
             $file = $this->saveMaterialFile($url,$source);
+
             if(!$file->is_oss && $this->saveOss){
                 DownloadMaterialJob::dispatch($file);
             }
@@ -130,16 +134,14 @@ class ChannelService implements ChannelInterface
 
             //提取下载文件中的编号
             $item_no = MaterialUrlAnalysisService::parseUrlItemNo($url);
-            $material = MaterialUrlAnalysisService::getBuildMaterial($url);
 
-
-            MaterialFile::where('material_id',$material->id)->where('item_no',$item_no)->delete();
+            MaterialFile::where('material_id',$this->material->id)->where('item_no',$item_no)->delete();
 
             $Obtain = new ObtainPageService();
-            $obtain_config = config('obtain.'.$material->site);
+            $obtain_config = config('obtain.'.$this->material->site);
             $attachments = $Obtain->build(new $obtain_config,$url);
             $file = MaterialFile::create([
-                'material_id'=>$material->id,
+                'material_id'=>$this->material->id,
                 'channel_id'=>$this->channel->id,
                 'item_no'=>$item_no,
                 'source'=>$url,

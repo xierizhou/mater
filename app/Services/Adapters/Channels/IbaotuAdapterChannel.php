@@ -6,6 +6,7 @@ namespace App\Services\Adapters\Channels;
 
 use App\Exceptions\ChannelFailException;
 use App\Exceptions\ChannelLoginFailException;
+use App\Models\ChannelAccountCookie;
 use App\Models\ChannelCookie;
 use App\Services\Interfaces\ChannelInterface;
 use App\Services\MaterialUrlAnalysisService;
@@ -48,10 +49,33 @@ class IbaotuAdapterChannel extends ChannelsAdapter implements ChannelInterface
     private $tries_second = 10;
 
 
-
+    /**
+     * @param bool $refresh
+     * @return mixed|string
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function login($refresh = false)
     {
+        ChannelAccountCookie::where('channel_account_id',$this->account->id)->delete();
+        $result = $this->client->request('GET',$this->account->extra,[
+            'allow_redirects'=>false,
+        ]);
+        $setCookie = $result->getHeader('Set-Cookie');
+        $auth_cookie = '';
+        foreach($setCookie as $item){
+            $save_cookie = array_get(explode(';',$item),0);
+            $cookie = explode('=',$save_cookie);
 
+            if(array_get($cookie,0) == 'auth_id'){
+                ChannelAccountCookie::create([
+                    'channel_account_id'=>$this->account->id,
+                    'type'=>array_get($cookie,0),
+                    'cookie'=>$save_cookie,
+                ]);
+                $auth_cookie = $save_cookie;
+            }
+        }
+        return $auth_cookie;
 
     }
 
@@ -62,8 +86,13 @@ class IbaotuAdapterChannel extends ChannelsAdapter implements ChannelInterface
      */
     public function download(string $url)
     {
+        if(!$cookie = ChannelAccountCookie::where('channel_account_id',$this->account->id)->where('type','auth_id')->first()){
+            $cookie = $this->login(true);
+            $this->cookie = $cookie;
+        }else{
+            $this->cookie = $cookie->cookie;
+        }
 
-        $this->cookie = $this->channel->cookie;
         $this->downloadUrl = $url;
         $item_no = $this->parseUrlItemNo($url);
         $requestUrl = "https://ibaotu.com/?m=downloadopen&a=open&id=$item_no&down_type=1&&attachment_id=";
@@ -79,8 +108,8 @@ class IbaotuAdapterChannel extends ChannelsAdapter implements ChannelInterface
             ],
             'allow_redirects'=>false,
         ]);
-
         $location = $result->getHeader('Location');
+
         return array_get($location,0);
 
 

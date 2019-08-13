@@ -57,8 +57,8 @@ class IndexController extends Controller
                 throw new \Exception($material->name.$material->state_cause);
             }
 
-            $channel = Channel::find(4);
-            $materialFile = ChannelService::getInstance($channel)->download($request->url);
+            //$channel = Channel::find(4);
+            $materialFile = ChannelService::getInstance($material)->download($request->url);
 
             if($materialFile){
                 $html = response($this->showDownload($materialFile))->getContent();

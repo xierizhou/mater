@@ -5,6 +5,8 @@ namespace App\Services\Adapters\Channels;
 
 
 use App\Models\Channel;
+use App\Models\ChannelAccount;
+use App\Models\ChannelAccountAuth;
 use GuzzleHttp\Client;
 class ChannelsAdapter
 {
@@ -13,18 +15,27 @@ class ChannelsAdapter
      */
     protected $channel;
 
+    protected $account;
+
+    protected $auth;
+
     /**
      * @var Client
      */
     protected $client;
 
+
     /**
      * ChannelsAdapter constructor.
      * @param Channel $channel
+     * @param ChannelAccount $account
+     * @param ChannelAccountAuth $auth
      */
-    public function __construct(Channel $channel)
+    public function __construct(Channel $channel,ChannelAccount $account,ChannelAccountAuth $auth)
     {
         $this->channel = $channel;
+        $this->account = $account;
+        $this->auth = $auth;
         $this->client = new Client();
     }
 

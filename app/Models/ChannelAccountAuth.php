@@ -11,4 +11,9 @@ class ChannelAccountAuth extends Model
     protected $fillable = [
         'channel_account_id','material_id','total','current','is_daily_reset','reset_number'
     ];
+
+    public function account()
+    {
+        return $this->belongsTo(ChannelAccount::class,'channel_account_id','id');
+    }
 }

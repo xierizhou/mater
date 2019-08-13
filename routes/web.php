@@ -33,7 +33,9 @@ Route::group(['middleware' => 'auth','namespace'=>'Home'], function () {
 });
 
 
-
+//自动注册
+Route::get('/automatic', 'Home\AutomaticController@index');
+Route::post('/automatic', 'Home\AutomaticController@register');
 
 
 
