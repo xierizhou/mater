@@ -28,7 +28,8 @@ class AutomaticController extends Controller
             $xit = $this->_getclientoperation_for_userauth($_SERVER['HTTP_USER_AGENT']);
             $sign .= $xit;
             $sign .= $browser_map;
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
+
+            $ip = $request->getClientIp();
             $ip_data = $this->_getIpAddress($ip);
             $sign .= $ip_data['data']['country_id'].$ip_data['data']['region_id'].$ip_data['data']['city_id'].$ip_data['data']['county_id'].$ip_data['data']['isp_id'];
             $sign .= $request->height.$request->weight.$request->availHeight.$request->availWeight.$request->colorDepth;
