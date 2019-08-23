@@ -118,6 +118,12 @@
                                     &nbsp;
                                     <a style="color: #929ab0;" href="{{ url('logout') }}">退出登录</a>
                                 </li>
+
+                                <li>
+                                    <span>可用金额：</span>
+                                    <b>{{ auth()->user()->money }}</b>
+                                    &nbsp;<a style="color: #929ab0;" href="javascript:;">充值</a>
+                                </li>
                                 {{--<li>
                                     <span>账号设置：</span>
                                     <span>修改密码</span>
@@ -146,14 +152,17 @@
                                                             @else
                                                                 <p class="num">剩余{{ array_get($userMaterial,$item->id.'.current') }}次 <i data-tips-content="{{ array_get($userMaterial,$item->id.'.end_time')>0?date('Y年m月d日',array_get($userMaterial,$item->id.'.end_time')).' 到期':"不限时间<br />用完为止" }}" style="font-size:12px;font-weight: bolder;color:#e6c934" data-item-id="{{ $item->id }}"  class="layui-icon layui-icon-tips tips_key_{{ $item->id }}"></i> </p>
                                                             @endif--}}
-                                                            <p class="num">支持全站下载</p>
+                                                            <p class="num">{{ $item->instructions }}</p>
+
 
                                                             <p onclick='window.open("{{ $item->domain }}");'>{{ $item->name }}</p>
+                                                            <p class="num">（{{ $item->unit_price }}/个）</p>
                                                         </b>
                                                     @else
                                                         <s>
                                                             <p class="num">({{ $item->state?"未激活":$item->state_cause }})</p>
                                                             <p onclick='window.open("{{ $item->domain }}");'>{{ $item->name }}</p>
+                                                            <p class="num">（{{ $item->unit_price }}/个）</p>
                                                         </s>
                                                     @endif
                                                 </div>
@@ -178,6 +187,7 @@
 <script>
     var pic_no = 0;
     var is_yz = 0;
+    var money = "{{ auth()->user()->money }}";
     layui.use(['layer'], function(){
         var layer = layui.layer;
 
@@ -196,6 +206,15 @@
             var objExp=new RegExp(Expression);
             if(objExp.test(url) != true){
                 layer.msg('素材链接格式有误，请重新输入', {
+                    offset: 't',
+                    anim: 6,
+                    icon: 2
+                });
+                return false;
+            }
+
+            if(money < 0){
+                layer.msg('您已欠费'+money+'元，请先充值哦', {
                     offset: 't',
                     anim: 6,
                     icon: 2

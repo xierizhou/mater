@@ -84,11 +84,12 @@
                         <span><a target="_blank" href="{{ $data->source }}">{{ $data->source }}</a></span>
                     </li>
 
+
                 </ul>
 
                 <div class="btn">
                     @foreach($data->attachments as $item)
-                    <a href="{{ $item->path?:$item->source }}"><span>下载{{ $item->title?:"文件" }}</span></a>
+                    <a target="_blank" href="{{ url('download') }}?id={{$item->id}}"><span>下载{{ $item->title?:"文件" }}</span></a>
                     @endforeach
 
                 </div>

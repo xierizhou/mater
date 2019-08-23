@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ReckonPieceUserMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -59,5 +60,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'auth.admin'=>\App\Http\Middleware\AuthAdmin::class,
         'auth.user.download'=>\App\Http\Middleware\UserDownloadAuthMiddleware::class,
+        'auth.user.reckon.piece'=>ReckonPieceUserMiddleware::class
+
     ];
 }

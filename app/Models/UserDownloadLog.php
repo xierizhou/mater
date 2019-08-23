@@ -31,6 +31,6 @@ use Illuminate\Database\Eloquent\Model;
 class UserDownloadLog extends Model
 {
     protected $fillable = [
-        'user_id','material_id','material_file_id','source_url'
+        'user_id','material_id','material_file_id','source_url','deduct_type','deduct'
     ];
 }

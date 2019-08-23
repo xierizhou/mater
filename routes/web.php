@@ -27,9 +27,10 @@ Route::post('/replace/build', 'Home\ReplaceController@build');
 Route::post('/replace/store', 'Home\ReplaceController@store');
 Route::group(['middleware' => 'auth','namespace'=>'Home'], function () {
     Route::get('/', 'IndexController@show')->name('home');
-    Route::get('/ibaout/varify', 'VerifyController@iboutuVerify');
-    Route::post('/build', 'IndexController@build')->middleware("auth.user.download");
-    Route::get('/ibaout/varify/show', 'VerifyController@iboutu');
+    Route::get('/ibaout/varify', 'VerifyController@iboutuVerify')->middleware("auth.user.reckon.piece");
+    Route::post('/build', 'IndexController@build')->middleware("auth.user.reckon.piece");
+    Route::get('/ibaout/varify/show', 'VerifyController@iboutu')->middleware("auth.user.reckon.piece");
+    Route::get('/download', 'IndexController@download')->middleware("auth.user.reckon.piece");
 });
 
 

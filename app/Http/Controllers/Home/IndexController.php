@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Home;
 
 use App\Models\Channel;
+use App\Models\MaterialFileAttachments;
+use App\Models\UserDownloadLog;
 use App\Models\UserMaterial;
 use App\Services\Adapters\ObtainPages\QianTuWangObtainPageAdapter;
 use App\Services\ChannelService;
@@ -17,6 +19,7 @@ use App\Services\MaterialDownloadService;
 use App\Models\MaterialFile;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 class IndexController extends Controller
 {
     /**
@@ -62,6 +65,7 @@ class IndexController extends Controller
 
             if($materialFile){
                 $html = response($this->showDownload($materialFile))->getContent();
+
                 return response()->json(['status_code'=>200,'is_decrease'=>$materialFile->is_decrease,'message'=>'解析成功','data'=>$html]);
 
             }
@@ -84,6 +88,41 @@ class IndexController extends Controller
     public function showDownload(MaterialFile $materialFile){
 
         return view('home.download')->with('data',$materialFile);
+    }
+
+    /**
+     * @param Request $request
+     * @throws \Throwable
+     */
+    public function download(Request $request){
+        $id = $request->id;
+        $attr = DB::transaction(function ()use($id) {
+            $attr = MaterialFileAttachments::find($id);
+            if(!$attr){
+                throw new \Exception("请求错误");
+            }
+            $log = UserDownloadLog::where('user_id',auth()->user()->id)->where('material_file_id',$attr->materialFile->id)->first();
+            if(!$log){
+                UserDownloadLog::create([
+                    'user_id'=>auth()->user()->id,
+                    'material_id'=>$attr->materialFile->material_id,
+                    'material_file_id'=>$attr->materialFile->id,
+                    'source_url'=>$attr->materialFile->source,
+                    'deduct_type'=>1,
+                    'deduct'=>$attr->materialFile->material->unit_price,
+                ]);
+
+                $user = auth()->user();
+                $user->decrement('money',$attr->materialFile->material->unit_price);
+                $user->save();
+            }
+
+            return $attr;
+        });
+
+
+        header("Location: {$attr->source}");
+
     }
 
 

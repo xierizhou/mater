@@ -39,4 +39,9 @@ class MaterialFileAttachments extends Model
     protected $fillable = [
         'material_file_id','title','source','path','local','size','format','extra'
     ];
+
+    public function materialFile()
+    {
+        return $this->belongsTo(MaterialFile::class);
+    }
 }
