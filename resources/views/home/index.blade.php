@@ -118,12 +118,13 @@
                                     &nbsp;
                                     <a style="color: #929ab0;" href="{{ url('logout') }}">退出登录</a>
                                 </li>
-
+                                @if(auth()->user()->money < 0)
                                 <li>
                                     <span>可用金额：</span>
                                     <b>{{ auth()->user()->money }}</b>
                                     &nbsp;<a style="color: #929ab0;" href="javascript:;">充值</a>
                                 </li>
+                                @endif
                                 {{--<li>
                                     <span>账号设置：</span>
                                     <span>修改密码</span>

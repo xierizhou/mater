@@ -41,6 +41,7 @@ class AutomaticController extends Controller
                 $user = User::create([
                     'username'=>$username,
                     'password'=>bcrypt($username),
+                    'money'=>10,
                     'token'=>$token,
                 ]);
                 UserMaterial::create([
