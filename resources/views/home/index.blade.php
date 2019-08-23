@@ -157,13 +157,13 @@
 
 
                                                             <p onclick='window.open("{{ $item->domain }}");'>{{ $item->name }}</p>
-                                                            <p class="num">（{{ $item->unit_price }}/个）</p>
+                                                            {{--<p class="num">（{{ $item->unit_price }}/个）</p>--}}
                                                         </b>
                                                     @else
                                                         <s>
                                                             <p class="num">({{ $item->state?"未激活":$item->state_cause }})</p>
                                                             <p onclick='window.open("{{ $item->domain }}");'>{{ $item->name }}</p>
-                                                            <p class="num">（{{ $item->unit_price }}/个）</p>
+                                                            {{--<p class="num">（{{ $item->unit_price }}/个）</p>--}}
                                                         </s>
                                                     @endif
                                                 </div>
